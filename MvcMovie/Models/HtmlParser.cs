@@ -9,45 +9,37 @@ namespace MvcMovie.Models
 {
     public class HtmlParser
     {
-        public string SearchForUrl = "www.infotrack.com.au";
-        public string SearchForKeywords = "online title search";
+        public string SearchForUrl { get; set; }
+        public string SearchForKeywords { get; set; }
+        public int MaxResultPage { get; set; }
+        public string SearchEngineUrl { get; set; }
+        public int MaxNumberOfResults { get; set; }
+        HtmlDocument Doc { get; set; } = new HtmlDocument();
 
 
-        public HtmlParser(string searchForKeywords)
+        public HtmlParser(string searchForKeywords = "online title search", int maxResultsPage = 10, 
+            string searchEngineUrl = "https://infotrack-tests.infotrack.com.au/Google/", int maxNumberOfResults = 50)
         {
             SearchForKeywords = searchForKeywords;
+            SearchForUrl = "www.infotrack.com.au";
+            MaxResultPage = maxResultsPage;
+            SearchEngineUrl = searchEngineUrl;
+            MaxNumberOfResults = maxNumberOfResults;
         }
 
-        public async Task<SearchResult> GetSearchResults()
+        public HtmlNodeCollection RemoveJSContent(string xpath)
         {
-            var currentPage = 1;
-            var maxPage = 10;
-            var decimalLength = currentPage.ToString("D").Length + 1;
-
-            var htmlString = "";
-            for (int i = 0; i < maxPage; i++)
-            {
-                var infoTrackUrl = "https://infotrack-tests.infotrack.com.au/Google/Page" + currentPage.ToString("D" + decimalLength.ToString()) + ".html";
-                var httpClient = new HttpClient();
-                htmlString += await httpClient.GetStringAsync(infoTrackUrl);
-                currentPage++;
-
-            }
-
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(htmlString);
-
-            // remove JS content
-            var nodes = doc.DocumentNode.SelectNodes("//script|//style");
+            var nodes = Doc.DocumentNode.SelectNodes(xpath);
             foreach (var node in nodes)
             {
                 node.ParentNode.RemoveChild(node);
             }
+            return nodes;
+        }
 
-            string htmlOutput = doc.DocumentNode.OuterHtml;
-            doc.LoadHtml(htmlOutput);
-
-            var htmlItemList = doc.DocumentNode.Descendants("div")
+        public List<HtmlNode> GetHrefList()
+        {
+            var htmlItemList = Doc.DocumentNode.Descendants("div")
                 .Where(node => node.GetAttributeValue("class", "")
                 .Equals("r")).ToList();
 
@@ -55,15 +47,18 @@ namespace MvcMovie.Models
                 .Where(node => node.GetAttributeValue("href", "")
                 .Contains(SearchForUrl)).ToList();
 
+            return hrefList;
+        }
+
+        public string GetMatchingPositions()
+        {
             var position = 1;
             var positionString = "";
-            var maxNumberOfResults = 50;
-            foreach (var item in hrefList)
+            foreach (var item in GetHrefList())
             {
                 if (item.InnerHtml.Contains(SearchForUrl))
                 {
-                    // only keep first 50 results
-                    if (position <= maxNumberOfResults)
+                    if (position <= MaxNumberOfResults)
                     {
                         positionString = String.Concat(positionString, position, ", ");
                         position++;
@@ -79,15 +74,36 @@ namespace MvcMovie.Models
             {
                 positionString = positionString.Remove(positionString.Length - 2);
             }
+            return positionString;
+        }
 
-            var model = new SearchResult
+        public async Task<SearchResult> GetSearchResults()
+        {
+            var currentPage = 1;
+            var maxPage = MaxResultPage;
+            var decimalLength = currentPage.ToString("D").Length + 1;
+
+            var htmlString = "";
+            var httpClient = new HttpClient();
+            for (int i = 0; i < maxPage; i++)
+            {
+                var infoTrackUrl = SearchEngineUrl + "Page" + currentPage.ToString("D" + decimalLength.ToString()) + ".html";
+                htmlString += await httpClient.GetStringAsync(infoTrackUrl);
+                currentPage++;
+            }
+            Doc.LoadHtml(htmlString);
+
+            // remove JS content
+            RemoveJSContent("//script|//style");
+
+            var searchResults = new SearchResult
             {
                 Url = SearchForUrl,
                 Keywords = SearchForKeywords,
-                Positions = positionString
+                Positions = GetMatchingPositions()
             };
 
-            return model;
+            return searchResults;
         }
 
     }
