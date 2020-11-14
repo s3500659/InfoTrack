@@ -17,15 +17,20 @@ namespace InfoTrackSearch.Models
         HtmlDocument Doc { get; set; } = new HtmlDocument();
 
 
-        public HtmlParser(SearchQuery searchQuery, int maxResultsPage = 10, 
-            string searchEngineUrl = "https://infotrack-tests.infotrack.com.au/Google/", int maxNumberOfResults = 50)
+        public HtmlParser(SearchQuery searchQuery, int maxResultsPage = 10, int maxNumberOfResults = 50)
         {
             SearchQuery = searchQuery;
             MaxResultPage = maxResultsPage;
-            SearchEngineUrl = searchEngineUrl;
             MaxNumberOfResults = maxNumberOfResults;
 
-            SearchQuery.Url = SearchQuery.Url.Replace("https://", "");
+            if (SearchQuery.SearchEngine == SearchEngine.Bing)
+            {
+                SearchEngineUrl = "https://infotrack-tests.infotrack.com.au/Bing/";
+            } 
+            else
+            {
+                SearchEngineUrl = "https://infotrack-tests.infotrack.com.au/Google/";
+            }  
         }
 
 
@@ -39,42 +44,54 @@ namespace InfoTrackSearch.Models
             return nodes;
         }
 
+        // return a list of html node filtered to max number of desired results (50)
         public List<HtmlNode> GetHrefList()
         {
-            var htmlItemList = Doc.DocumentNode.Descendants("div")
+            var filteredList = new List<HtmlNode>(MaxNumberOfResults);
+            if (SearchQuery.SearchEngine == SearchEngine.Google)
+            {
+                var htmlItemList = Doc.DocumentNode.Descendants("div")
                 .Where(node => node.GetAttributeValue("class", "")
                 .Equals("r")).ToList();
 
-            var filteredList = new List<HtmlNode>(50);
-            for (int i = 0; i < MaxNumberOfResults; i++)
-            {
-                filteredList.Add(htmlItemList[i]);
+                for (int i = 0; i < MaxNumberOfResults; i++)
+                {
+                    filteredList.Add(htmlItemList[i]);
+                }
             }
+            else
+            {
+                var htmlItemList = Doc.DocumentNode.Descendants("ol")
+                .Where(node => node.GetAttributeValue("id", "")
+                .Equals("b_results")).ToList();
 
+                for (int i = 0; i < MaxNumberOfResults; i++)
+                {
+                    filteredList.Add(htmlItemList[i]);
+                }
+            }
+            
             return filteredList;
         }
 
-        // fix index position
         public string GetMatchingPositions()
         {
-            var position = 1;
             var positionString = "";
             var filteredList = GetHrefList();
             for (int i = 0; i < filteredList.Count; i++)
             {
-                if (filteredList[i].InnerHtml.Contains(SearchQuery.Url))
+                if (filteredList[i].InnerHtml.Contains(SearchQuery.SearchForUrl))
                 {
                     if (i < MaxNumberOfResults)
                     {
                         positionString = String.Concat(positionString, i+1, ", ");
-                        position++;
                     }
                 }
             }
 
             if (positionString == "")
             {
-                positionString = "0";
+                positionString = $"URL not found within the first {MaxNumberOfResults}th position.";
             }
             else
             {

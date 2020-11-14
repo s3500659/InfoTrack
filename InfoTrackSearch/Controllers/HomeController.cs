@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using InfoTrackSearch.Models;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System;
 
 namespace InfoTrackSearch.Controllers
 {
@@ -36,11 +37,10 @@ namespace InfoTrackSearch.Controllers
                 query.Keywords = "online title search";
             }
 
-            if (query.Url == null)
+            if (query.SearchForUrl == null)
             {
-                query.Url = "www.infotrack.com.au";
+                query.SearchForUrl = "www.infotrack.com.au";
             }
-
             var parser = new HtmlParser(query);
             var result = await parser.GetSearchResults();
             return View(result);
