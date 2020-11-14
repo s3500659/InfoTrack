@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using MvcMovie.Models;
+using InfoTrackSearch.Models;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace MvcMovie.Controllers
+namespace InfoTrackSearch.Controllers
 {
     public class HomeController : Controller
     {

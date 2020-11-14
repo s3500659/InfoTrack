@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "uvQ4Q5hRMzDioolCeC7vYi9JFeNeDOiOinP7s7Ev3bxw3WHKjOrwD7v9T3yt7AO2/VIFAkeYR5bhDpSAELKM2w==",
+  "dgSpecHash": "LzmFviEXPdUtAYNSffuKAzWWu0oWwWKMfNhvUWcGF7CDOhL/pFHgo5ULIi8r0dXc2Xp6KHLLcodZzgaoBuEGWw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Vinh\\source\\repos\\MvcMovie\\MvcMovie\\MvcMovie.csproj",
+  "projectFilePath": "C:\\Users\\Vinh\\source\\repos\\MvcMovie\\MvcMovie\\InfoTrackSearch.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Vinh\\.nuget\\packages\\htmlagilitypack\\1.11.28\\htmlagilitypack.1.11.28.nupkg.sha512",
     "C:\\Users\\Vinh\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",

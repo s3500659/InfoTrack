@@ -7522,9 +7522,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Vinh\\source\\repos\\MvcMovie\\MvcMovie\\MvcMovie.csproj",
-      "projectName": "MvcMovie",
-      "projectPath": "C:\\Users\\Vinh\\source\\repos\\MvcMovie\\MvcMovie\\MvcMovie.csproj",
+      "projectUniqueName": "C:\\Users\\Vinh\\source\\repos\\MvcMovie\\MvcMovie\\InfoTrackSearch.csproj",
+      "projectName": "InfoTrackSearch",
+      "projectPath": "C:\\Users\\Vinh\\source\\repos\\MvcMovie\\MvcMovie\\InfoTrackSearch.csproj",
       "packagesPath": "C:\\Users\\Vinh\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\Vinh\\source\\repos\\MvcMovie\\MvcMovie\\obj\\",
       "projectStyle": "PackageReference",
