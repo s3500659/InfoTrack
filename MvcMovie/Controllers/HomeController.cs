@@ -22,10 +22,23 @@ namespace MvcMovie.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var searchResult = await GooglSearchAsync();
-            return View(searchResult);
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Search()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Search([Bind("Keywords")] SearchResult searchResult)
+        {
+            var result = await GooglSearchAsync(searchResult.Keywords);
+            return View(result);
         }
 
         public IActionResult Privacy()
@@ -39,7 +52,7 @@ namespace MvcMovie.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private async Task<SearchResult> GooglSearchAsync(string url = "www.infotrack.com.au", string keywords = "online title search")
+        private async Task<SearchResult> GooglSearchAsync(string keywords = "online title search", string url = "www.infotrack.com.au")
         {
 
             var currentPage = 1;
@@ -56,35 +69,40 @@ namespace MvcMovie.Controllers
 
             }
 
-            HtmlDocument htmlDocument = new HtmlDocument();
-            htmlDocument.LoadHtml(htmlString);
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(htmlString);
 
             // remove JS content
-            var nodes = htmlDocument.DocumentNode.SelectNodes("//script|//style");
+            var nodes = doc.DocumentNode.SelectNodes("//script|//style");
             foreach (var node in nodes)
             {
                 node.ParentNode.RemoveChild(node);
             }
 
-            string htmlOutput = htmlDocument.DocumentNode.OuterHtml;
-            htmlDocument.LoadHtml(htmlOutput);
+            string htmlOutput = doc.DocumentNode.OuterHtml;
+            doc.LoadHtml(htmlOutput);
 
-            var htmlItemList = htmlDocument.DocumentNode.Descendants("div")
+            var htmlItemList = doc.DocumentNode.Descendants("div")
                 .Where(node => node.GetAttributeValue("class", "")
                 .Equals("r")).ToList();
 
-            var productListItems = htmlItemList[0].Descendants("a")
+            var hrefList = htmlItemList[0].Descendants("a")
                 .Where(node => node.GetAttributeValue("href", "")
                 .Contains(url)).ToList();
 
             var position = 1;
             var positionString = "";
-            foreach (var item in productListItems)
+            var maxNumberOfResults = 50;
+            foreach (var item in hrefList)
             {
                 if (item.InnerHtml.Contains(url))
                 {
-                    positionString = String.Concat(positionString, position, ", ");
-                    position++;
+                    // only keep first 50 results
+                    if (position <= maxNumberOfResults)
+                    {
+                        positionString = String.Concat(positionString, position, ", ");
+                        position++;
+                    }
                 }
             }
 
