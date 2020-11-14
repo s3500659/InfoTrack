@@ -1,0 +1,15 @@
+﻿@model InfoTrackSearch.Models.SearchQuery
+
+@{
+    ViewData["Title"] = "Search";
+}
+
+<h1>Search view</h1>
+
+<p>Search Keywords: @Model.Keywords</p>
+<p>Looking for URL: @Model.Url</p>
+<p>Match found at position: @Model.Positions</p>
+
+<div>
+    <a asp-action="Index">Back to Search</a>
+</div>
