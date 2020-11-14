@@ -45,17 +45,13 @@ namespace InfoTrackSearch.Models
                 .Where(node => node.GetAttributeValue("class", "")
                 .Equals("r")).ToList();
 
-
-            var hrefList = new List<HtmlNode>();
-            foreach (var item in htmlItemList)
+            var filteredList = new List<HtmlNode>(50);
+            for (int i = 0; i < MaxNumberOfResults; i++)
             {
-
-                if (item.Descendants("a").Where(node => node.GetAttributeValue("href", "").Contains(SearchQuery.Url)).Any())
-                {
-                    hrefList.Add(item);
-                }
+                filteredList.Add(htmlItemList[i]);
             }
-            return hrefList;
+
+            return filteredList;
         }
 
         // fix index position
@@ -63,13 +59,14 @@ namespace InfoTrackSearch.Models
         {
             var position = 1;
             var positionString = "";
-            foreach (var item in GetHrefList())
+            var filteredList = GetHrefList();
+            for (int i = 0; i < filteredList.Count; i++)
             {
-                if (item.InnerHtml.Contains(SearchQuery.Url))
+                if (filteredList[i].InnerHtml.Contains(SearchQuery.Url))
                 {
-                    if (position <= MaxNumberOfResults)
+                    if (i < MaxNumberOfResults)
                     {
-                        positionString = String.Concat(positionString, position, ", ");
+                        positionString = String.Concat(positionString, i+1, ", ");
                         position++;
                     }
                 }

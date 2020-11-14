@@ -7522,11 +7522,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Vinh\\source\\repos\\InfoTrackSearch\\InfoTrackSearch\\InfoTrackSearch.csproj",
+      "projectUniqueName": "C:\\Users\\Vinh\\source\\repos\\Vinh\\InfoTrack\\InfoTrackSearch\\InfoTrackSearch.csproj",
       "projectName": "InfoTrackSearch",
-      "projectPath": "C:\\Users\\Vinh\\source\\repos\\InfoTrackSearch\\InfoTrackSearch\\InfoTrackSearch.csproj",
+      "projectPath": "C:\\Users\\Vinh\\source\\repos\\Vinh\\InfoTrack\\InfoTrackSearch\\InfoTrackSearch.csproj",
       "packagesPath": "C:\\Users\\Vinh\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Vinh\\source\\repos\\InfoTrackSearch\\InfoTrackSearch\\obj\\",
+      "outputPath": "C:\\Users\\Vinh\\source\\repos\\Vinh\\InfoTrack\\InfoTrackSearch\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Vinh\\AppData\\Roaming\\NuGet\\NuGet.Config",
