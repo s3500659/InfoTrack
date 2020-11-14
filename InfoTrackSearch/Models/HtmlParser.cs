@@ -45,13 +45,20 @@ namespace InfoTrackSearch.Models
                 .Where(node => node.GetAttributeValue("class", "")
                 .Equals("r")).ToList();
 
-            var hrefList = htmlItemList[0].Descendants("a")
-                .Where(node => node.GetAttributeValue("href", "")
-                .Contains(SearchQuery.Url)).ToList();
 
+            var hrefList = new List<HtmlNode>();
+            foreach (var item in htmlItemList)
+            {
+
+                if (item.Descendants("a").Where(node => node.GetAttributeValue("href", "").Contains(SearchQuery.Url)).Any())
+                {
+                    hrefList.Add(item);
+                }
+            }
             return hrefList;
         }
 
+        // fix index position
         public string GetMatchingPositions()
         {
             var position = 1;

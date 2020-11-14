@@ -31,9 +31,13 @@ namespace InfoTrackSearch.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Search(SearchQuery query)
         {
-            if (query.Keywords == null || query.Url == null)
+            if (query.Keywords == null)
             {
                 query.Keywords = "online title search";
+            }
+
+            if (query.Url == null)
+            {
                 query.Url = "www.infotrack.com.au";
             }
 
