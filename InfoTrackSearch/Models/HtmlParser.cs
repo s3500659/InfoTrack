@@ -61,9 +61,9 @@ namespace InfoTrackSearch.Models
             }
             else
             {
-                var htmlItemList = Doc.DocumentNode.Descendants("ol")
-                .Where(node => node.GetAttributeValue("id", "")
-                .Equals("b_results")).ToList();
+                var htmlItemList = Doc.DocumentNode.Descendants("li")
+                .Where(node => node.GetAttributeValue("class", "")
+                .Equals("b_algo")).ToList();
 
                 for (int i = 0; i < MaxNumberOfResults; i++)
                 {
@@ -117,7 +117,7 @@ namespace InfoTrackSearch.Models
             Doc.LoadHtml(htmlString);
 
             // remove JS content
-            RemoveJSContent("//script|//style");
+            //RemoveJSContent("//script|//style");
 
             SearchQuery.Positions = GetMatchingPositions();
 
