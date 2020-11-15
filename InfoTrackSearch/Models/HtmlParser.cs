@@ -117,7 +117,7 @@ namespace InfoTrackSearch.Models
             Doc.LoadHtml(htmlString);
 
             // remove JS content
-            //RemoveJSContent("//script|//style");
+            RemoveJSContent("//script|//style");
 
             SearchQuery.Positions = GetMatchingPositions();
 
