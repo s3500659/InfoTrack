@@ -91,7 +91,7 @@ namespace InfoTrackSearch.Models
 
             if (positionString == "")
             {
-                positionString = $"URL not found within the first {MaxNumberOfResults}th position.";
+                positionString = $"URL not found within the first {MaxNumberOfResults}th results.";
             }
             else
             {
