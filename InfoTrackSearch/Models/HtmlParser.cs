@@ -8,10 +8,25 @@ namespace InfoTrackSearch.Models
 {
     public class HtmlParser :IParser
     {
+        private static HtmlParser Instance { get; set; }
         public SearchQuery SearchQuery { get; set; }
         public HtmlDocument Doc { get; set; } = new HtmlDocument();
 
-        public HtmlParser(SearchQuery searchQuery)
+        private HtmlParser()
+        {
+            
+        }
+
+        public static HtmlParser GetInstance()
+        {
+            if (Instance == null)
+            {
+                Instance = new HtmlParser();
+            }
+            return Instance;
+        }
+
+        public void SetSearchQuery(SearchQuery searchQuery)
         {
             SearchQuery = searchQuery;
         }

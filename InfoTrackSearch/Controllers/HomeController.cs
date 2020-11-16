@@ -41,7 +41,9 @@ namespace InfoTrackSearch.Controllers
             {
                 searchQuery.SearchForUrl = "www.infotrack.com.au";
             }
-            var parser = new HtmlParser(searchQuery);
+            var parser = HtmlParser.GetInstance();
+            parser.SetSearchQuery(searchQuery);
+
             var searchEngine = new SearchEngine(parser, searchQuery);
             var result = await searchEngine.GetSearchResults();
             return View(result);

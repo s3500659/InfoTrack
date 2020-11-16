@@ -12,8 +12,8 @@ namespace InfoTrackSearch.Models
 
     public class SearchEngine : ISearchEngine
     {
-        HtmlParser HtmlParser { get; set; }
-        SearchQuery SearchQuery { get; set; }
+        public HtmlParser HtmlParser { get; set; }
+        public SearchQuery SearchQuery { get; set; }
         public string Url { get; set; } 
 
         public SearchEngine(HtmlParser htmlParser, SearchQuery searchQuery, string url = "https://infotrack-tests.infotrack.com.au/Google/")
