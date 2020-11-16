@@ -8,29 +8,15 @@ using System.Threading.Tasks;
 
 namespace InfoTrackSearch.Models
 {
-    public class HtmlParser : IParser
+    public class HtmlParser :IParser
     {
         public SearchQuery SearchQuery { get; set; }
-        public int MaxResultPage { get; set; }
-        public string SearchEngineUrl { get; set; }
-        public int MaxNumberOfResults { get; set; }
-        HtmlDocument Doc { get; set; } = new HtmlDocument();
+        
+        public HtmlDocument Doc { get; set; } = new HtmlDocument();
 
-
-        public HtmlParser(SearchQuery searchQuery, int maxResultsPage = 10, int maxNumberOfResults = 50)
+        public HtmlParser(SearchQuery searchQuery)
         {
             SearchQuery = searchQuery;
-            MaxResultPage = maxResultsPage;
-            MaxNumberOfResults = maxNumberOfResults;
-
-            if (SearchQuery.SearchEngine == SearchEngine.Bing)
-            {
-                SearchEngineUrl = "https://infotrack-tests.infotrack.com.au/Bing/";
-            } 
-            else
-            {
-                SearchEngineUrl = "https://infotrack-tests.infotrack.com.au/Google/";
-            }  
         }
 
 
@@ -47,14 +33,14 @@ namespace InfoTrackSearch.Models
         // return a list of html node filtered to max number of desired results (50)
         public List<HtmlNode> GetHrefList()
         {
-            var filteredList = new List<HtmlNode>(MaxNumberOfResults);
-            if (SearchQuery.SearchEngine == SearchEngine.Google)
+            var filteredList = new List<HtmlNode>(SearchQuery.MaxNumberOfResults);
+            if (SearchQuery.SearchEngine == SearchEngineEnum.Google)
             {
                 var htmlItemList = Doc.DocumentNode.Descendants("div")
                 .Where(node => node.GetAttributeValue("class", "")
                 .Equals("r")).ToList();
 
-                for (int i = 0; i < MaxNumberOfResults; i++)
+                for (int i = 0; i < SearchQuery.MaxNumberOfResults; i++)
                 {
                     filteredList.Add(htmlItemList[i]);
                 }
@@ -65,7 +51,7 @@ namespace InfoTrackSearch.Models
                 .Where(node => node.GetAttributeValue("class", "")
                 .Equals("b_algo")).ToList();
 
-                for (int i = 0; i < MaxNumberOfResults; i++)
+                for (int i = 0; i < SearchQuery.MaxNumberOfResults; i++)
                 {
                     filteredList.Add(htmlItemList[i]);
                 }
@@ -82,7 +68,7 @@ namespace InfoTrackSearch.Models
             {
                 if (filteredList[i].InnerHtml.Contains(SearchQuery.SearchForUrl))
                 {
-                    if (i < MaxNumberOfResults)
+                    if (i < SearchQuery.MaxNumberOfResults)
                     {
                         positionString = String.Concat(positionString, i+1, ", ");
                     }
@@ -91,7 +77,7 @@ namespace InfoTrackSearch.Models
 
             if (positionString == "")
             {
-                positionString = $"URL not found within the first {MaxNumberOfResults}th results.";
+                positionString = $"URL not found within the first {SearchQuery.MaxNumberOfResults}th results.";
             }
             else
             {
@@ -99,30 +85,5 @@ namespace InfoTrackSearch.Models
             }
             return positionString;
         }
-
-        public async Task<SearchQuery> GetSearchResults()
-        {
-            var currentPage = 1;
-            var maxPage = MaxResultPage;
-            var decimalLength = currentPage.ToString("D").Length + 1;
-
-            var htmlString = "";
-            var httpClient = new HttpClient();
-            for (int i = 0; i < maxPage; i++)
-            {
-                var infoTrackUrl = SearchEngineUrl + "Page" + currentPage.ToString("D" + decimalLength.ToString()) + ".html";
-                htmlString += await httpClient.GetStringAsync(infoTrackUrl);
-                currentPage++;
-            }
-            Doc.LoadHtml(htmlString);
-
-            // remove JS content
-            RemoveJSContent("//script|//style");
-
-            SearchQuery.Positions = GetMatchingPositions();
-
-            return SearchQuery;
-        }
-
     }
 }

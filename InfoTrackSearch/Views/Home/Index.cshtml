@@ -22,8 +22,8 @@
                 <span asp-validation-for="SearchForUrl" class="text-danger"></span>
             </div>
             <div class="form-group">
-                Google: @Html.RadioButtonFor(m => m.SearchEngine, "Google")
-                Bing: @Html.RadioButtonFor(m => m.SearchEngine, "Bing")
+                Google: @Html.RadioButtonFor(m => m.SearchEngine, SearchEngineEnum.Google)
+                Bing: @Html.RadioButtonFor(m => m.SearchEngine, SearchEngineEnum.Bing)
                 <input type="submit" value="Search" class="btn btn-primary" style="float: right"/>
             </div>
         </form>
