@@ -1,6 +1,4 @@
-﻿using HtmlAgilityPack;
-using InfoTrackSearch.Interfaces;
-using System.Collections.Generic;
+﻿using InfoTrackSearch.Interfaces;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -18,8 +16,7 @@ namespace InfoTrackSearch.Models
         SearchQuery SearchQuery { get; set; }
         public string Url { get; set; } 
 
-        public SearchEngine(HtmlParser htmlParser, SearchQuery searchQuery, SearchEngineEnum engine = SearchEngineEnum.Google, 
-            string url = "https://infotrack-tests.infotrack.com.au/Google/")
+        public SearchEngine(HtmlParser htmlParser, SearchQuery searchQuery, string url = "https://infotrack-tests.infotrack.com.au/Google/")
         {
             HtmlParser = htmlParser;
             SearchQuery = searchQuery;

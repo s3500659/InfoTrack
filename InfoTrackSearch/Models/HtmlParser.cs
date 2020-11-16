@@ -3,15 +3,12 @@ using InfoTrackSearch.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace InfoTrackSearch.Models
 {
     public class HtmlParser :IParser
     {
         public SearchQuery SearchQuery { get; set; }
-        
         public HtmlDocument Doc { get; set; } = new HtmlDocument();
 
         public HtmlParser(SearchQuery searchQuery)
@@ -60,6 +57,7 @@ namespace InfoTrackSearch.Models
             return filteredList;
         }
 
+        // find matching positions
         public string GetMatchingPositions()
         {
             var positionString = "";
