@@ -16,6 +16,6 @@ namespace InfoTrackSearch.Interfaces
 
         public string GetMatchingPositions();
 
-        public Task<SearchQuery> GetSearchResults();
+        
     }
 }

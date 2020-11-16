@@ -18,8 +18,8 @@ namespace InfoTrackSearch.Controllers
 
         public IActionResult Index()
         {
-            var searchResult = new SearchQuery();
-            return View(searchResult);
+            var searchQuery = new SearchQuery();
+            return View(searchQuery);
         }
 
         [HttpGet]
@@ -30,19 +30,20 @@ namespace InfoTrackSearch.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Search(SearchQuery query)
+        public async Task<IActionResult> Search(SearchQuery searchQuery)
         {
-            if (query.Keywords == null)
+            if (searchQuery.Keywords == null)
             {
-                query.Keywords = "online title search";
+                searchQuery.Keywords = "online title search";
             }
 
-            if (query.SearchForUrl == null)
+            if (searchQuery.SearchForUrl == null)
             {
-                query.SearchForUrl = "www.infotrack.com.au";
+                searchQuery.SearchForUrl = "www.infotrack.com.au";
             }
-            var parser = new HtmlParser(query);
-            var result = await parser.GetSearchResults();
+            var parser = new HtmlParser(searchQuery);
+            var searchEngine = new SearchEngine(parser, searchQuery);
+            var result = await searchEngine.GetSearchResults();
             return View(result);
         }
 
