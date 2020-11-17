@@ -4,6 +4,7 @@ using InfoTrackSearch.Models;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System;
+using InfoTrackSearch.Interfaces;
 
 namespace InfoTrackSearch.Controllers
 {
@@ -18,8 +19,8 @@ namespace InfoTrackSearch.Controllers
 
         public IActionResult Index()
         {
-            var searchQuery = new SearchQuery();
-            return View(searchQuery);
+            var blankSearchQuery = new SearchQuery();
+            return View(blankSearchQuery);
         }
 
         [HttpGet]
@@ -30,22 +31,42 @@ namespace InfoTrackSearch.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Search(SearchQuery searchQuery)
+        public async Task<IActionResult> Search(SearchQuery blankSearchQuery)
         {
-            if (searchQuery.Keywords == null)
+            if (blankSearchQuery.Keywords == null)
             {
-                searchQuery.Keywords = "online title search";
+                blankSearchQuery.SetSearchKeywords("online title search");
             }
 
-            if (searchQuery.SearchForUrl == null)
+            if (blankSearchQuery.SearchForUrl == null)
             {
-                searchQuery.SearchForUrl = "https://www.infotrack.com.au";
+                blankSearchQuery.SetSearchForUrl("https://www.infotrack.com.au");
             }
-            var parser = HtmlParser.GetInstance();
-            parser.SetSearchQuery(searchQuery);
 
-            var searchEngine = new SearchEngine(parser, searchQuery);
+            var selectedSearchEngine = blankSearchQuery.SearchEngine;
+
+            SearchQuery newSearchQuery;
+            if (selectedSearchEngine == SearchEngineEnum.Bing)
+            {
+                var bingSearch = new BingSearchQuery();
+                var queryDirector = new SearchQueryDirector(bingSearch);
+                queryDirector.CreateSearchQuery(blankSearchQuery.SearchForUrl, blankSearchQuery.Keywords);
+                newSearchQuery = queryDirector.GetSearchQuery();
+            }
+            else
+            {
+                var googleSearch = new GoogleSearchQuery();
+                var queryDirector = new SearchQueryDirector(googleSearch);
+                queryDirector.CreateSearchQuery(blankSearchQuery.SearchForUrl, blankSearchQuery.Keywords);
+                newSearchQuery = queryDirector.GetSearchQuery();
+            }
+
+            var htmlParser = HtmlParser.GetInstance();
+            htmlParser.SetSearchQuery(newSearchQuery);
+
+            var searchEngine = new SearchEngine(htmlParser, newSearchQuery);
             var result = await searchEngine.GetSearchResults();
+
             return View(result);
         }
 
