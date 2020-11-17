@@ -44,18 +44,20 @@ namespace InfoTrackSearch.Controllers
             var selectedSearchEngine = blankSearchQuery.SearchEngine;
 
             SearchQuery newSearchQuery;
+            var maxResults = 50;
+            var maxPage = 10;
             if (selectedSearchEngine == SearchEngineEnum.Bing)
             {
                 var bingSearch = new BingSearchQuery();
                 var queryDirector = new SearchQueryDirector(bingSearch);
-                queryDirector.CreateSearchQuery(blankSearchQuery.SearchForUrl, blankSearchQuery.Keywords);
+                queryDirector.CreateSearchQuery(blankSearchQuery.SearchForUrl, blankSearchQuery.Keywords, maxResults, maxPage);
                 newSearchQuery = queryDirector.GetSearchQuery();
             }
             else
             {
                 var googleSearch = new GoogleSearchQuery();
                 var queryDirector = new SearchQueryDirector(googleSearch);
-                queryDirector.CreateSearchQuery(blankSearchQuery.SearchForUrl, blankSearchQuery.Keywords);
+                queryDirector.CreateSearchQuery(blankSearchQuery.SearchForUrl, blankSearchQuery.Keywords, maxResults, maxPage);
                 newSearchQuery = queryDirector.GetSearchQuery();
             }
 

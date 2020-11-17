@@ -20,10 +20,10 @@ namespace InfoTrackSearch.Models
             return SearchQueryBuilder.GetSearchQuery();
         }
 
-        public void CreateSearchQuery(string searchForUrl, string keywords)
+        public void CreateSearchQuery(string searchForUrl, string keywords, int maxNumberOfResults, int maxResultPage)
         {
-            SearchQueryBuilder.SetMaxNumberOfResults(50);
-            SearchQueryBuilder.SetMaxResultPage(10);
+            SearchQueryBuilder.SetMaxNumberOfResults(maxNumberOfResults);
+            SearchQueryBuilder.SetMaxResultPage(maxResultPage);
             SearchQueryBuilder.SetSearchEngine();
             SearchQueryBuilder.SetSearchForUrl(searchForUrl);
             SearchQueryBuilder.SetSearchKeywords(keywords);
