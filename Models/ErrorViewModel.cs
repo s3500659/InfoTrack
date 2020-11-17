@@ -1,6 +1,6 @@
 using System;
 
-namespace MvcMovie.Models
+namespace InfoTrackSearch.Models
 {
     public class ErrorViewModel
     {
