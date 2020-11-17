@@ -14,7 +14,7 @@ namespace InfoTrackSearch.Models
     {
         public HtmlParser HtmlParser { get; set; }
         public SearchQuery SearchQuery { get; set; }
-        public string Url { get; set; } 
+        public string Url { get; private set; } 
 
         public SearchEngine(HtmlParser htmlParser, SearchQuery searchQuery, string url = "https://infotrack-tests.infotrack.com.au/Google/")
         {
@@ -47,7 +47,7 @@ namespace InfoTrackSearch.Models
             // remove JS content
             HtmlParser.RemoveJSContent("//script|//style");
 
-            SearchQuery.SetFoundPosition(HtmlParser.GetMatchingPositions());
+            SearchQuery.Positions = HtmlParser.GetMatchingPositions();
 
             return SearchQuery;
         }

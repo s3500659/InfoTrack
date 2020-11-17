@@ -3,8 +3,6 @@ using Microsoft.Extensions.Logging;
 using InfoTrackSearch.Models;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using System;
-using InfoTrackSearch.Interfaces;
 
 namespace InfoTrackSearch.Controllers
 {
@@ -35,12 +33,12 @@ namespace InfoTrackSearch.Controllers
         {
             if (blankSearchQuery.Keywords == null)
             {
-                blankSearchQuery.SetSearchKeywords("online title search");
+                blankSearchQuery.Keywords = "online title search";
             }
 
             if (blankSearchQuery.SearchForUrl == null)
             {
-                blankSearchQuery.SetSearchForUrl("https://www.infotrack.com.au");
+                blankSearchQuery.SearchForUrl = "https://www.infotrack.com.au";
             }
 
             var selectedSearchEngine = blankSearchQuery.SearchEngine;

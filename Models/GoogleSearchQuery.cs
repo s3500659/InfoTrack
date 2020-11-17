@@ -19,32 +19,32 @@ namespace InfoTrackSearch.Models
 
         public void SetFoundPosition(string position)
         {
-            SearchQuery.SetFoundPosition(position);
+            SearchQuery.Positions = position;
         }
 
         public void SetMaxNumberOfResults(int maxResults)
         {
-            SearchQuery.SetMaxNumberOfResults(maxResults);
+            SearchQuery.MaxNumberOfResults = maxResults;
         }
 
         public void SetMaxResultPage(int page)
         {
-            SearchQuery.SetMaxResultPage(page);
+            SearchQuery.MaxResultPage = page;
         }
 
         public void SetSearchEngine()
         {
-            SearchQuery.SetSearchEngine(SearchEngineEnum.Google);
+            SearchQuery.SearchEngine = SearchEngineEnum.Google;
         }
 
         public void SetSearchForUrl(string url)
         {
-            SearchQuery.SetSearchForUrl(url);
+            SearchQuery.SearchForUrl = url;
         }
 
         public void SetSearchKeywords(string keywords)
         {
-            SearchQuery.SetSearchKeywords(keywords);
+            SearchQuery.Keywords = keywords;
         }
 
         public SearchQuery GetSearchQuery()
