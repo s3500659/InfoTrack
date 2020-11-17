@@ -47,7 +47,7 @@ namespace InfoTrackSearch.Models
             // remove JS content
             HtmlParser.RemoveJSContent("//script|//style");
 
-            SearchQuery.Positions = HtmlParser.GetMatchingPositions();
+            SearchQuery.SetFoundPosition(HtmlParser.GetMatchingPositions());
 
             return SearchQuery;
         }
