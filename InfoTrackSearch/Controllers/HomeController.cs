@@ -39,7 +39,7 @@ namespace InfoTrackSearch.Controllers
 
             if (searchQuery.SearchForUrl == null)
             {
-                searchQuery.SearchForUrl = "www.infotrack.com.au";
+                searchQuery.SearchForUrl = "https://www.infotrack.com.au";
             }
             var parser = HtmlParser.GetInstance();
             parser.SetSearchQuery(searchQuery);
