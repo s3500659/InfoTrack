@@ -28,6 +28,14 @@ namespace InfoTrackSearch.Models.Strategy
 
         public Task<SearchQuery> DoSearchAsync(SearchQuery searchQuery, SearchQueryDirector director, HtmlParser htmlParser, int maxNumberResults, int maxResultPages)
         {
+            if (searchQuery.SearchEngine == SearchEngineEnum.Bing)
+            {
+                _strategy = new BingSearchStrategy();
+            }
+            else
+            {
+                _strategy = new GoogleSearchStrategy();
+            }
 
             var result = _strategy.DoSearchAsync(searchQuery, director, htmlParser, maxNumberResults, maxResultPages);
             return result;

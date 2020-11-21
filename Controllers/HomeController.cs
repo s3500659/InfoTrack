@@ -48,19 +48,9 @@ namespace InfoTrackSearch.Controllers
 
             var maxresults = 50;
             var maxpage = 10;
-
             var htmlParser = HtmlParser.GetInstance();
-            SearchQuery result;
-            if (searchQuery.SearchEngine == SearchEngineEnum.Bing)
-            {
-                _searchStrategyFactory.SetStrategy(new BingSearchStrategy());
-                result = await _searchStrategyFactory.DoSearchAsync(searchQuery, _searchDirector, htmlParser, maxresults, maxpage);
-            } 
-            else
-            {
-                _searchStrategyFactory.SetStrategy(new GoogleSearchStrategy());
-                result = await _searchStrategyFactory.DoSearchAsync(searchQuery, _searchDirector, htmlParser, maxresults, maxpage);
-            }
+
+            var result = await _searchStrategyFactory.DoSearchAsync(searchQuery, _searchDirector, htmlParser, maxresults, maxpage);
 
             return View(result);
         }
