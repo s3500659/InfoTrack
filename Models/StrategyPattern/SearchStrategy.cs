@@ -11,12 +11,12 @@ namespace InfoTrackSearch.Models.Strategy
         Task<SearchQuery> DoSearchAsync(SearchQuery searchQuery, SearchQueryDirector director, HtmlParser htmlParser, int maxNumberResults, int maxResultPages);
     }
 
-    public class ContextStrategy
+    public class SearchStrategy : ISearchStrategy
     {
         private ISearchStrategy _strategy;
 
 
-        public ContextStrategy()
+        public SearchStrategy()
         {
 
         }
@@ -26,7 +26,7 @@ namespace InfoTrackSearch.Models.Strategy
             _strategy = strategy;
         }
 
-        public Task<SearchQuery> DoSearchLogic(SearchQuery searchQuery, SearchQueryDirector director, HtmlParser htmlParser, int maxNumberResults, int maxResultPages)
+        public Task<SearchQuery> DoSearchAsync(SearchQuery searchQuery, SearchQueryDirector director, HtmlParser htmlParser, int maxNumberResults, int maxResultPages)
         {
 
             var result = _strategy.DoSearchAsync(searchQuery, director, htmlParser, maxNumberResults, maxResultPages);
