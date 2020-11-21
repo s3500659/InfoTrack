@@ -10,7 +10,17 @@ namespace InfoTrackSearch.Models
     {
         public ISearchQueryBuilder SearchQueryBuilder { get; set; }
 
+        public SearchQueryDirector()
+        {
+            
+        }
+
         public SearchQueryDirector(ISearchQueryBuilder searchQueryBuilder)
+        {
+            SearchQueryBuilder = searchQueryBuilder;
+        }
+
+        public void SetSearchQueryBuilder(ISearchQueryBuilder searchQueryBuilder)
         {
             SearchQueryBuilder = searchQueryBuilder;
         }
