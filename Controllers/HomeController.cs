@@ -10,10 +10,14 @@ namespace InfoTrackSearch.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly SearchStrategyFactory _searchStrategyFactory;
+        private readonly SearchQueryDirector _searchDirector;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, SearchStrategyFactory searchStrategyFactory, SearchQueryDirector director)
         {
             _logger = logger;
+            _searchStrategyFactory = searchStrategyFactory;
+            _searchDirector = director;
         }
 
         public IActionResult Index()
@@ -30,35 +34,32 @@ namespace InfoTrackSearch.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Search(SearchQuery blankSearchQuery)
+        public async Task<IActionResult> Search(SearchQuery searchQuery)
         {
-            if (blankSearchQuery.Keywords == null)
+            if (searchQuery.Keywords == null)
             {
-                blankSearchQuery.Keywords = "online title search";
+                searchQuery.Keywords = "online title search";
             }
 
-            if (blankSearchQuery.SearchForUrl == null)
+            if (searchQuery.SearchForUrl == null)
             {
-                blankSearchQuery.SearchForUrl = "https://www.infotrack.com.au";
+                searchQuery.SearchForUrl = "https://www.infotrack.com.au";
             }
 
-            var selectedSearchEngine = blankSearchQuery.SearchEngine;
             var maxresults = 50;
             var maxpage = 10;
 
-            var searchStrategy = new SearchStrategy();
-            var director = new SearchQueryDirector();
             var htmlParser = HtmlParser.GetInstance();
             SearchQuery result;
-            if (selectedSearchEngine == SearchEngineEnum.Bing)
+            if (searchQuery.SearchEngine == SearchEngineEnum.Bing)
             {
-                searchStrategy.SetStrategy(new BingSearchStrategy());
-                result = await searchStrategy.DoSearchAsync(blankSearchQuery, director, htmlParser, maxresults, maxpage);
+                _searchStrategyFactory.SetStrategy(new BingSearchStrategy());
+                result = await _searchStrategyFactory.DoSearchAsync(searchQuery, _searchDirector, htmlParser, maxresults, maxpage);
             } 
             else
             {
-                searchStrategy.SetStrategy(new GoogleSearchStrategy());
-                result = await searchStrategy.DoSearchAsync(blankSearchQuery, director, htmlParser, maxresults, maxpage);
+                _searchStrategyFactory.SetStrategy(new GoogleSearchStrategy());
+                result = await _searchStrategyFactory.DoSearchAsync(searchQuery, _searchDirector, htmlParser, maxresults, maxpage);
             }
 
             return View(result);

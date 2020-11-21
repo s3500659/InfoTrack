@@ -1,3 +1,5 @@
+using InfoTrackSearch.Models;
+using InfoTrackSearch.Models.Strategy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +21,10 @@ namespace InfoTrackSearch
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddSingleton<SearchStrategyFactory>();
+
+            services.AddSingleton<SearchQueryDirector>();
 
         }
 

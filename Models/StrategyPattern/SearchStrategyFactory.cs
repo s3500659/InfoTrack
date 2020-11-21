@@ -11,12 +11,12 @@ namespace InfoTrackSearch.Models.Strategy
         Task<SearchQuery> DoSearchAsync(SearchQuery searchQuery, SearchQueryDirector director, HtmlParser htmlParser, int maxNumberResults, int maxResultPages);
     }
 
-    public class SearchStrategy : ISearchStrategy
+    public class SearchStrategyFactory : ISearchStrategy
     {
         private ISearchStrategy _strategy;
 
 
-        public SearchStrategy()
+        public SearchStrategyFactory()
         {
 
         }
