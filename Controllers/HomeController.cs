@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using InfoTrackSearch.Models;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using InfoTrackSearch.Models.Strategy;
 
 namespace InfoTrackSearch.Controllers
 {
@@ -42,30 +43,23 @@ namespace InfoTrackSearch.Controllers
             }
 
             var selectedSearchEngine = blankSearchQuery.SearchEngine;
+            var maxresults = 50;
+            var maxpage = 10;
 
-            SearchQuery newSearchQuery;
-            var maxResults = 50;
-            var maxPage = 10;
+            var context = new ContextStrategy();
+            var director = new SearchQueryDirector();
+            var htmlParser = HtmlParser.GetInstance();
+            SearchQuery result;
             if (selectedSearchEngine == SearchEngineEnum.Bing)
             {
-                var bingSearch = new BingSearchQuery();
-                var queryDirector = new SearchQueryDirector(bingSearch);
-                queryDirector.CreateSearchQuery(blankSearchQuery.SearchForUrl, blankSearchQuery.Keywords, maxResults, maxPage);
-                newSearchQuery = queryDirector.GetSearchQuery();
-            }
+                context.SetStrategy(new BingSearchStrategy());
+                result = await context.DoSearchLogic(blankSearchQuery, director, htmlParser, maxresults, maxpage);
+            } 
             else
             {
-                var googleSearch = new GoogleSearchQuery();
-                var queryDirector = new SearchQueryDirector(googleSearch);
-                queryDirector.CreateSearchQuery(blankSearchQuery.SearchForUrl, blankSearchQuery.Keywords, maxResults, maxPage);
-                newSearchQuery = queryDirector.GetSearchQuery();
+                context.SetStrategy(new GoogleSearchStrategy());
+                result = await context.DoSearchLogic(blankSearchQuery, director, htmlParser, maxresults, maxpage);
             }
-
-            var htmlParser = HtmlParser.GetInstance();
-            htmlParser.SetSearchQuery(newSearchQuery);
-
-            var searchEngine = new SearchEngine(htmlParser, newSearchQuery);
-            var result = await searchEngine.GetSearchResults();
 
             return View(result);
         }
